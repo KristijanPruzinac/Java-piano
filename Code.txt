@@ -1,0 +1,111 @@
+import java.awt.AWTException;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+
+public class main_class {
+	public static int currentTime() {
+		return (int) System.currentTimeMillis();
+	}
+	public static void sleep(int milliseconds) {
+		try {
+			TimeUnit.MILLISECONDS.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void exit() {
+		System.exit(0);
+	}
+	public static Point getCursorPos() {
+		return MouseInfo.getPointerInfo().getLocation();
+	}
+	public static void click(int time) throws AWTException {
+		Robot robot = new Robot();
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		sleep(time);
+		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+	}
+	public static void moveTo(int x, int y, int time) throws AWTException {
+		Robot robot = new Robot();
+		if (time != 0) {
+			int start_time = currentTime();
+			int startx = getCursorPos().x;
+			int starty = getCursorPos().y;
+			int useless = 0;
+			for (int repeat = 1; repeat < time + 1; repeat++) {
+				robot.mouseMove(0, 0);
+				robot.mouseMove((int) (startx + (((x - startx) / time) * repeat)), (int) (starty + (((y - starty) / time) * repeat)));
+				while (currentTime() - start_time < repeat) {
+					useless = 0;
+				}
+			}
+		}
+		else {
+			robot.mouseMove(x, y);
+		}
+		
+	}
+	public static boolean isInteger(String str) {
+	    if (str == null) {
+	        return false;
+	    }
+	    int length = str.length();
+	    if (length == 0) {
+	        return false;
+	    }
+	    int i = 0;
+	    if (str.charAt(0) == '-') {
+	        if (length == 1) {
+	            return false;
+	        }
+	        i = 1;
+	    }
+	    for (; i < length; i++) {
+	        char c = str.charAt(i);
+	        if (c < '0' || c > '9') {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	public static void main(String[] arguments) throws Exception {
+		Robot robot = new Robot();
+		Point[] pos = {new Point(170, 502), new Point(191, 449), new Point(202, 495), new Point(224, 458), new Point(247, 526), new Point(269, 525), new Point(291, 455), new Point(306, 507), new Point(322, 453), new Point(333, 509), new Point(362, 438), new Point(372, 498), new Point(410, 507), new Point(427, 450), new Point(440, 490), new Point(457, 451), new Point(472, 529), new Point(514, 519), new Point(526, 450), new Point(543, 519), new Point(562, 454), new Point(572, 514), new Point(594, 454), new Point(610, 498), new Point(650, 503), new Point(664, 448), new Point(677, 494), new Point(696, 462), new Point(713, 506), new Point(743, 507), new Point(773, 447), new Point(778, 487), new Point(799, 456), new Point(817, 515), new Point(834, 450), new Point(841, 511)};
+		List<String> keys = Arrays.asList("c1","cs1","d1","ds1","e1","f1","fs1","g1","gs1","a1","as1","h1","c2","cs2","d2","ds2","e2","f2","fs2","g2","gs2","a2","as2","h2","c3","cs3","d3","ds3","e3","f3","fs3","g3","gs3","a3","as3","h3");
+		String[] notes = {
+		"e3","4","e3","4","e3","2","e3","4","e3","4","e3","2","e3","4","g3","4","c3","4","d3","4","e3","2","f3","4","f3","4","f3","2","f3","4","e3","4","e3","2","e3","4","d3","4","d3","4","e3","4","d3","4","g3","2","e3","4","e3","4","e3","2","e3","4","e3","4","e3","2","e3","4","g3","4","c3","4","d3","4","e3","2","f3","4","f3","4","f3","2","f3","4","e3","4","e3","2","g3","4","g3","4","f3","4","d3","4","c3","1"
+};
+		sleep(3000);
+		
+		//config ---------------------------------------
+		
+		double timefac = 25; //percent
+		int move_board = 0; //move whole song by 7 * move_board keys
+		int loop = 1; //loop how many times
+		
+		// ---------------------------------------------
+		
+		robot.mouseMove(100, 100);
+		for (int times = 0; times < loop; times++) {
+			for (String note : notes) {
+				if (isInteger(note)) {
+					sleep((int) ((4000 / 100) * timefac) / Integer.parseInt(note));
+					robot.mouseRelease(InputEvent.BUTTON1_MASK);
+				}
+				else {
+					robot.mouseMove(0, 0);
+					moveTo((int) ((pos[keys.indexOf(note)].x * 1.25) + (move_board * 295)), (int) (pos[keys.indexOf(note)].y * 1.2), 0);
+					robot.mousePress(InputEvent.BUTTON1_MASK);
+				}
+			}
+		}
+		exit();
+	} 
+}
