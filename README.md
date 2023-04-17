@@ -1,6 +1,6 @@
 Do not change "change_cap.txt"
 
-Use "Interactive key capture" to record keys on pinao on site https://virtualpiano.net
+Use "Interactive key capture" to record keys on piano on site https://virtualpiano.net
 
 - By pressing "shift" a key will be captured
 
